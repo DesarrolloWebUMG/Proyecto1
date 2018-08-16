@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet"  href="Estilos.css">
+	<link rel="stylesheet"  href="Fonts.css">
+	<link rel="stylesheet"  href="EstiloP.css">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>COMPRA</title>
+<script src="jquery-3.3.1.js"></script>
+<script type="text/javascript">
+	//aquí va el script para la BBDD de Web SQL
+
+      var myDBInstance = openDatabase('TiendaJuegos', '1.0', 'Base de Datos para la compra de videojuegos', 2 * 1024 * 1024);
+
+      if (!myDBInstance) {
+            alert('La BBDD no fue creada correctamente');
+      }
+      else {
+           var version = myDBInstance.version;
+          
+            myDBInstance.transaction(function (tran) {
+                var html = '<table><thead><th>ID Juego </th><th>Nombre del Juego </th><th>Precio </th><th>Cantidad </th></thead><tbody>';
+                tran.executeSql('SELECT * FROM CarritoCompras WHERE Cantidad > 0', [], function (tran, data) {
+                    for (i = 0; i < data.rows.length; i++) {
+                        html += '<tr><td>' + data.rows[i].id + '</td><td>' + data.rows[i].Nombre + '</td><td>' + data.rows[i].Precio + '</td><td>'+ data.rows[i].Cantidad + '</td></tr>';
+                    };
+                    html += '</tbody></table>';
+                    $('#myTab').html(html);
+                });
+            });
+      }
+
+      function limpiar(){
+      		alert('Carrito Vaciado');
+      		var version = myDBInstance.version;
+      		myDBInstance.transaction(function (tran) {
+      			tran.executeSql('update CarritoCompras set Nombre = "Splatoon 2", Precio = 699, Cantidad = 0 where id = 1'); 
+      			tran.executeSql('update CarritoCompras set Nombre = "Super Mario Odyssey", Precio = 699, Cantidad = 0 where id = 2'); 
+      			tran.executeSql('update CarritoCompras set Nombre = "Zelda Breath of the Wild", Precio = 699, Cantidad = 0 where id = 3'); 
+      			tran.executeSql('update CarritoCompras set Nombre = "Super Smash Bros Ultimate", Precio = 699, Cantidad = 0 where id = 4'); 
+      			tran.executeSql('update CarritoCompras set Nombre = "Dragon Ball Xenoverse 2", Precio = 699, Cantidad = 0 where id = 5'); 
+      			tran.executeSql('update CarritoCompras set Nombre = "Pokemon Lets Go Pikachu", Precio = 699, Cantidad = 0 where id = 6');
+      		});
+
+      }
+</script>
+</head>
+<body>
+	<header>
+		<div class="Menu_bar">
+			<a href="#" class="bt-menu"><span class="icon-menu"></span>Menu</a>
+		</div>
+		<nav>
+			<ul>
+				<li><a href="index.html"><span class="icon-home"></span>Inicio</a></li>
+				<li><a href="Productos.html"><span class="icon-price-tags"></span>Productos</a></li>
+				<li><a class="active" href="Compra.html"><span class="icon-cart"></span>Compra</a></li>
+				<li><a href="#"><span class="icon-users"></span>Contactos</a></li>
+			</ul>
+		</nav>
+	</header>
+	<div class="botones_carrito">
+		<a type="submit" class="vaciar_carrito" href="Compra.html" onclick="limpiar();">Vaciar Carrito</a>
+	</div>
+		<article>
+      		<section id="tablaPrecios">
+         		<div id="myTab"></div>   
+      		</section>
+   		</article>
+	<script src="Menu.js"></script>
+</body>
+</html>
